@@ -15,6 +15,8 @@ None
 ## Usage
 Answer given prompts to produce a simple SVG image.
 
+link to walkthrough video: https://drive.google.com/file/d/124xQp9rTH_XSTSfk1F7TISMtFF_-XKt7/view
+
 ## Contributing
 J-T-Paden
 
