@@ -1,13 +1,25 @@
+// import fs 
 const fs = require('fs')
+// import npm inquirer
 const inquirer = require('inquirer')
-// import Shapes class from shapes.js
-const Shapes = require('Shapes')
+// import shape classes
+const {Square, Circle, Triangle} = require('./lib/shapes')
+// function to initialize the app
 function init() {
+// create questions array using npm inquirer prompts
 const questions = [
     {
     type: 'input',
     message: 'Input logo text up to 3 characters.',
-    name: 'text'
+    name: 'text',
+    validate: (input) => {
+// limit logo to 3 characters
+if (input.length >3) {
+    return "Must be 3 or less characters."
+} else {
+    return true
+}
+    }
     },
     {
         type: 'input',
@@ -15,12 +27,12 @@ const questions = [
         name: 'colorText'
     },
     {
-        type: 'input',
+        type: 'list',
         message: 'Select a background shape.',
         choices: [
             "Square",
             "Triangle",
-            "Cricle"
+            "Circle"
         ],
         name: 'shape'
     },
@@ -31,25 +43,29 @@ const questions = [
     },
 ];
 inquirer.prompt(questions).then((answers) => {
+// set svgContent to empty string to be updated after running application
+var svgContent = ' '
+    if (answers.shape === 'Circle') {
+        const circle = new Circle(answers.colorText, answers.text, answers.colorShape)
+        svgContent = circle.renderStart() + circle.renderShape() + circle.renderText() + circle.renderEnd()
+    }
+    else if (answers.shape === 'Square') {
+        const square = new Square(answers.colorText, answers.text, answers.colorShape)
+        svgContent = square.renderStart() + square.renderShape() + square.renderText() + square.renderEnd()
+    }
+    else {
+        const triangle = new Triangle(answers.colorText, answers.text, answers.colorShape)
+        svgContent = triangle.renderStart() + triangle.renderShape() + triangle.renderText() + triangle.renderEnd()
+    }
 
-const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
-`;
-const filePath = 'index.html';
-fs.writeFile(filePath, htmlContent, (err) => {
-(err) ? console.error('Error writing to HTML file:', err) : console.log('HTML file has been written successfully.')
+// create variable with path to SVG file
+const filePath = 'logo.svg';
+// use fs method writeFile to write to logo.svg using svgContent string for input
+fs.writeFile(filePath, svgContent, (err) => {
+// use ternary operator to create if else statement for writing error callback function
+(err) ? console.error('Error writing to SVG file:', err) : console.log('SVG file has been written successfully.')
 })
 })
 }
-
+// calling initialize function
 init();
